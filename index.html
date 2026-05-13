@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdSpy Pro — Espiona. Copia. Escala.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b10;
+  --surface: #0f1420;
+  --surface2: #151c2c;
+  --border: #1e2a40;
+  --accent: #00e5ff;
+  --accent2: #7c3aed;
+  --accent3: #ff3d71;
+  --text: #e8edf8;
+  --muted: #6b7a99;
+  --green: #00e676;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.4;
+}
+
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 60px;
+  background: rgba(8,11,16,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+.logo span { color: var(--accent); }
+
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-cta { display: flex; gap: 12px; align-items: center; }
+
+.btn-ghost {
+  padding: 9px 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  text-decoration: none;
+}
+.btn-ghost:hover { border-color: var(--accent); background: rgba(0,229,255,0.05); }
+
+.btn-primary {
+  padding: 10px 22px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  transition: opacity .2s, transform .2s;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-glow {
+  position: absolute;
+  width: 800px; height: 800px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+.hero-glow2 {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%);
+  top: 30%; left: 60%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: pulse-glow 6s ease-in-out infinite reverse;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 1px solid rgba(0,229,255,0.25);
+  border-radius: 999px;
+  background: rgba(0,229,255,0.07);
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 28px;
+  animation: fadeUp .6s ease both;
+}
+.badge-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(42px, 7vw, 86px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  max-width: 900px;
+  margin-bottom: 24px;
+  animation: fadeUp .7s ease .1s both;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+
+.hero p {
+  font-size: clamp(16px, 2.5vw, 20px);
+  color: var(--muted);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+  animation: fadeUp .7s ease .2s both;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeUp .7s ease .3s both;
+}
+
+.btn-hero {
+  padding: 16px 36px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  transition: all .2s;
+  text-decoration: none;
+}
+.btn-hero:hover { transform: translateY(-2px); box-shadow: 0 20px 60px rgba(0,229,255,0.3); }
+
+.hero-social-proof {
+  margin-top: 60px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  animation: fadeUp .7s ease .4s both;
+}
+.avatars { display: flex; }
+.avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  background: var(--surface2);
+  margin-left: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.avatar:first-child { margin-left: 0; }
+
+.social-text { font-size: 13px; color: var(--muted); }
+.social-text strong { color: var(--text); }
+
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 14px 0;
+  margin-bottom: 80px;
+}
+.ticker-track {
+  display: flex;
+  gap: 60px;
+  animation: ticker 28s linear infinite;
+  white-space: nowrap;
+  width: max-content;
+}
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.ticker-item span { color: var(--accent); font-weight: 600; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.section-sub {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+.pain-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 80px 0;
+}
+.pain-inner { max-width: 1200px; margin: 0 auto; padding: 0 60px; }
+.pain-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  max-width: 700px;
+  margin-bottom: 48px;
+}
+.pain-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.pain-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: border-color .2s, transform .2s;
+  cursor: default;
+}
+.pain-card:hover { border-color: rgba(255,61,113,0.4); transform: translateY(-3px); }
+.pain-card-icon { font-size: 26px; margin-bottom: 14px; }
+.pain-card p { font-size: 15px; line-height: 1.6; color: var(--muted); }
+.pain-card strong { color: var(--text); }
+
+.features-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 60px;
+}
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .25s, transform .25s;
+}
+.feature-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.feature-card.full { grid-column: 1 / -1; }
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(0,229,255,0.04), transparent 60%);
+  pointer-events: none;
+}
+.feature-number {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+.feature-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.feature-card p { color: var(--muted); line-height: 1.7; font-size: 15px; }
+
+.mock-ui {
+  margin-top: 28px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 13px;
+}
+.mock-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.mock-row:last-child { border-bottom: none; }
+.mock-thumb {
+  width: 44px; height: 44px;
+  border-radius: 8px;
+  background: var(--surface2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.mock-info { flex: 1; }
+.mock-name { font-weight: 600; color: var(--text); font-size: 13px; }
+.mock-meta { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.mock-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.mock-badge.green { background: rgba(0,230,118,0.12); color: var(--green); }
+.mock-badge.blue { background: rgba(0,229,255,0.1); color: var(--accent); }
+.mock-badge.purple { background: rgba(124,58,237,0.15); color: #a78bfa; }
+
+.stats-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0;
+}
+.stats-strip-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat-item {
+  padding: 48px 0;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-label { font-size: 14px; color: var(--muted); }
+
+.pricing-section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+.pricing-toggle {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 32px;
+  margin-bottom: 48px;
+}
+.toggle-label { font-size: 14px; color: var(--muted); }
+.toggle-label.active { color: var(--text); }
+.toggle-switch {
+  width: 50px; height: 26px;
+  background: var(--border);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background .2s;
+  border: none;
+}
+.toggle-switch.on { background: var(--accent2); }
+.toggle-knob {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: white;
+  transition: transform .2s;
+  pointer-events: none;
+}
+.toggle-switch.on .toggle-knob { transform: translateX(24px); }
+.save-badge {
+  padding: 3px 12px;
+  background: rgba(0,230,118,0.12);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 600;
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.price-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 28px;
+  position: relative;
+  transition: border-color .2s, transform .2s;
+}
+.price-card:hover { transform: translateY(-4px); }
+.price-card.popular {
+  border-color: var(--accent);
+  background: linear-gradient(to bottom, rgba(0,229,255,0.05), var(--surface));
+}
+.popular-tag {
+  position: absolute;
+  top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--accent);
+  color: #000;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.price-plan { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.price-desc { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 24px; }
+.price-amount { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+.price-currency { font-size: 20px; font-weight: 600; }
+.price-num { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -2px; }
+.price-period { color: var(--muted); font-size: 14px; }
+.price-billing { font-size: 12px; color: var(--muted); margin-bottom: 28px; }
+.price-cta {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+  margin-bottom: 28px;
+}
+.price-cta:hover { border-color: var(--accent); background: rgba(0,229,255,0.05); }
+.price-card.popular .price-cta { background: var(--accent); color: #000; border-color: var(--accent); }
+.price-card.popular .price-cta:hover { opacity: 0.85; }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.price-features li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--muted); }
+.price-features li .check { color: var(--green); font-size: 15px; flex-shrink: 0; }
+
+.testimonials-section { padding: 100px 60px; max-width: 1200px; margin: 0 auto; }
+.testimonials-grid { columns: 3; gap: 20px; margin-top: 60px; }
+.testimonial-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  break-inside: avoid;
+  margin-bottom: 20px;
+  transition: border-color .2s;
+}
+.testimonial-card:hover { border-color: rgba(0,229,255,0.2); }
+.t-stars { color: #fbbf24; font-size: 14px; margin-bottom: 12px; letter-spacing: 1px; }
+.t-text { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+.t-author { display: flex; align-items: center; gap: 12px; }
+.t-avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.t-name { font-weight: 600; font-size: 13px; }
+.t-role { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+.faq-section { padding: 80px 60px; max-width: 900px; margin: 0 auto; }
+.faq-list { margin-top: 48px; }
+.faq-item { border-bottom: 1px solid var(--border); padding: 24px 0; }
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color .2s;
+  gap: 16px;
+}
+.faq-question:hover { color: var(--accent); }
+.faq-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: transform .3s, border-color .2s;
+  color: var(--muted);
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); border-color: var(--accent); color: var(--accent); }
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s ease, padding .35s;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.faq-item.open .faq-answer { max-height: 400px; padding-top: 16px; }
+
+.cta-section { padding: 80px 60px; max-width: 1200px; margin: 0 auto; }
+.cta-card {
+  background: linear-gradient(135deg, rgba(0,229,255,0.08) 0%, rgba(124,58,237,0.08) 100%);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-radius: 32px;
+  padding: 80px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-card::before {
+  content: '';
+  position: absolute;
+  top: -100px; left: 50%; transform: translateX(-50%);
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,229,255,0.12), transparent 70%);
+  pointer-events: none;
+}
+.cta-card h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  margin-bottom: 16px;
+}
+.cta-card p { color: var(--muted); font-size: 18px; margin-bottom: 40px; }
+
+footer { border-top: 1px solid var(--border); background: var(--surface); padding: 60px; }
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+.footer-brand .logo { display: block; margin-bottom: 16px; }
+.footer-brand p { color: var(--muted); font-size: 14px; line-height: 1.7; max-width: 280px; }
+.footer-col h4 { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 20px; }
+.footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 14px; margin-bottom: 12px; transition: color .2s; }
+.footer-col a:hover { color: var(--text); }
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+.app-demo { margin: 60px auto; max-width: 1200px; padding: 0 60px; }
+.app-window {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.5);
+}
+.app-titlebar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot.red { background: #ff5f57; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #28c840; }
+.app-titlebar-center { flex: 1; display: flex; justify-content: center; }
+.app-url-bar {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 12px;
+  color: var(--muted);
+  width: 300px;
+  text-align: center;
+}
+.app-body { display: grid; grid-template-columns: 220px 1fr; min-height: 480px; }
+.app-sidebar { background: var(--bg); border-right: 1px solid var(--border); padding: 24px 16px; }
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  margin-bottom: 4px;
+}
+.sidebar-item:hover, .sidebar-item.active { background: rgba(0,229,255,0.08); color: var(--accent); }
+.sidebar-item .icon { font-size: 16px; }
+.app-main { padding: 28px; }
+.app-main-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.app-main-header h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; }
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 16px;
+  width: 260px;
+}
+.search-bar input { background: none; border: none; outline: none; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; flex: 1; }
+.search-bar input::placeholder { color: var(--muted); }
+.ads-grid-demo { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.ad-card-demo {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color .2s, transform .2s;
+}
+.ad-card-demo:hover { border-color: var(--accent); transform: translateY(-3px); }
+.ad-thumb { height: 120px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+.ad-card-meta { padding: 12px; }
+.ad-brand { font-size: 12px; font-weight: 600; color: var(--text); }
+.ad-platform { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.ad-stats { display: flex; gap: 8px; margin-top: 8px; }
+.ad-stat { padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+.ad-stat.up { background: rgba(0,230,118,0.1); color: var(--green); }
+.ad-stat.info { background: rgba(0,229,255,0.1); color: var(--accent); }
+.platform-filter { display: flex; gap: 8px; margin-bottom: 20px; }
+.pf-btn {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.pf-btn.active, .pf-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,229,255,0.06); }
+
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  section { padding: 60px 24px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr 1fr; }
+  .testimonials-grid { columns: 1; }
+  .stats-strip-inner { grid-template-columns: 1fr 1fr; }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+  .app-body { grid-template-columns: 1fr; }
+  .app-sidebar { display: none; }
+  .ads-grid-demo { grid-template-columns: 1fr 1fr; }
+  .pain-inner { padding: 0 24px; }
+  .app-demo { padding: 0 24px; }
+  .cta-card { padding: 48px 24px; }
+  footer { padding: 48px 24px; }
+  .footer-bottom { flex-direction: column; gap: 12px; }
+  .pricing-section { padding: 60px 24px; }
+  .faq-section { padding: 60px 24px; }
+  .testimonials-section { padding: 60px 24px; }
+  .cta-section { padding: 60px 24px; }
+}
+@media (max-width: 600px) {
+  .pricing-grid { grid-template-columns: 1fr; }
+  .ads-grid-demo { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Ad<span>Spy</span>Pro</div>
+  <div class="nav-links">
+    <a href="#features">Funcionalidades</a>
+    <a href="#pricing">Preços</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-cta">
+    <a href="#pricing" class="btn-ghost">Entrar</a>
+    <a href="#pricing" class="btn-primary">Teste Grátis 7 Dias →</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="badge"><div class="badge-dot"></div> +23 Milhões de anúncios indexados</div>
+  <h1>Espiona. Copia.<br><em>Escala.</em></h1>
+  <p>Descobre os anúncios que as marcas estão a usar para vender milhões — antes dos teus concorrentes. IA que analisa, transcreve e gera scripts vencedores em segundos.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-hero">Começar Gratuitamente →</a>
+    <a href="#demo" class="btn-ghost" style="padding:16px 28px;font-size:15px;">Ver Demo ▶</a>
+  </div>
+  <div class="hero-social-proof">
+    <div class="avatars">
+      <div class="avatar">🧑</div>
+      <div class="avatar">👩</div>
+      <div class="avatar">🧔</div>
+      <div class="avatar">👨‍💼</div>
+    </div>
+    <div class="social-text"><strong>+8.200 marcas</strong> já usam o AdSpyPro</div>
+  </div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker">
+    <div class="ticker-item">🔥 Nike <span>+340%</span> ROAS este mês</div>
+    <div class="ticker-item">📈 Gymshark escala com <span>47 criativos</span> novos</div>
+    <div class="ticker-item">💰 Marca de suplementos gasta <span>€120k/dia</span></div>
+    <div class="ticker-item">🚀 DTC brand ativa <span>23 ads</span> simultâneos</div>
+    <div class="ticker-item">⚡ Novo anúncio viral detectado em <span>Fashion</span></div>
+    <div class="ticker-item">🎯 Beauty brand com <span>ROAS 4.8x</span> ao vivo</div>
+    <div class="ticker-item">📊 <span>12.000</span> anúncios adicionados hoje</div>
+    <div class="ticker-item">🔥 Nike <span>+340%</span> ROAS este mês</div>
+    <div class="ticker-item">📈 Gymshark escala com <span>47 criativos</span> novos</div>
+    <div class="ticker-item">💰 Marca de suplementos gasta <span>€120k/dia</span></div>
+    <div class="ticker-item">🚀 DTC brand ativa <span>23 ads</span> simultâneos</div>
+    <div class="ticker-item">⚡ Novo anúncio viral detectado em <span>Fashion</span></div>
+    <div class="ticker-item">🎯 Beauty brand com <span>ROAS 4.8x</span> ao vivo</div>
+    <div class="ticker-item">📊 <span>12.000</span> anúncios adicionados hoje</div>
+  </div>
+</div>
+
+<div class="app-demo fade-in" id="demo">
+  <div class="app-window">
+    <div class="app-titlebar">
+      <div class="dot red"></div>
+      <div class="dot yellow"></div>
+      <div class="dot green"></div>
+      <div class="app-titlebar-center">
+        <div class="app-url-bar">app.adspypro.com/explore</div>
+      </div>
+    </div>
+    <div class="app-body">
+      <div class="app-sidebar">
+        <div class="sidebar-item active"><span class="icon">🔍</span> Explorar Ads</div>
+        <div class="sidebar-item"><span class="icon">🎯</span> Brand Spy</div>
+        <div class="sidebar-item"><span class="icon">📌</span> Guardados</div>
+        <div class="sidebar-item"><span class="icon">🤖</span> Gerar Script</div>
+        <div class="sidebar-item"><span class="icon">🖼️</span> Criar Imagem</div>
+        <div class="sidebar-item"><span class="icon">📊</span> Análises</div>
+        <div class="sidebar-item"><span class="icon">⚙️</span> Definições</div>
+      </div>
+      <div class="app-main">
+        <div class="app-main-header">
+          <h3>Explorar Anúncios</h3>
+          <div class="search-bar">
+            <span style="color:var(--muted)">🔍</span>
+            <input type="text" placeholder="Pesquisar nicho, marca..." id="demoSearch">
+          </div>
+        </div>
+        <div class="platform-filter">
+          <button class="pf-btn active" onclick="filterPlatform(this,'Todos')">Todos</button>
+          <button class="pf-btn" onclick="filterPlatform(this,'Meta')">📘 Meta</button>
+          <button class="pf-btn" onclick="filterPlatform(this,'TikTok')">🎵 TikTok</button>
+          <button class="pf-btn" onclick="filterPlatform(this,'Google')">🔵 Google</button>
+        </div>
+        <div class="ads-grid-demo" id="adsGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pain-section">
+  <div class="pain-inner fade-in">
+    <p class="section-label">O problema</p>
+    <h2 class="pain-title">Porque é que aumentar o gasto em ads destrói o teu ROAS?</h2>
+    <div class="pain-cards">
+      <div class="pain-card"><div class="pain-card-icon">😤</div><p><strong>Testes caóticos</strong> — Testas dezenas de criativos mas poucos escalam de verdade.</p></div>
+      <div class="pain-card"><div class="pain-card-icon">🔀</div><p><strong>Ferramentas dispersas</strong> — Spreadsheets, Google Drive, Notion, Pinterest... É um caos.</p></div>
+      <div class="pain-card"><div class="pain-card-icon">💸</div><p><strong>Orçamento desperdiçado</strong> — Pagas para descobrir o que já funciona para os concorrentes.</p></div>
+      <div class="pain-card"><div class="pain-card-icon">📉</div><p><strong>ROAS instável</strong> — Quando escalas o gasto, o ROAS cai em queda livre.</p></div>
+      <div class="pain-card"><div class="pain-card-icon">⏳</div><p><strong>Tempo perdido</strong> — Horas a pesquisar manualmente o que a IA pode fazer em segundos.</p></div>
+      <div class="pain-card"><div class="pain-card-icon">😰</div><p><strong>1 único ad vencedor</strong> — E quando ele morrer, ficaste sem nada na mão.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="stats-strip">
+  <div class="stats-strip-inner">
+    <div class="stat-item fade-in"><div class="stat-num" data-target="23">0</div><div class="stat-label">Milhões de anúncios indexados</div></div>
+    <div class="stat-item fade-in"><div class="stat-num" data-target="10" data-suffix="x">0</div><div class="stat-label">x mais rápido na criação de scripts</div></div>
+    <div class="stat-item fade-in"><div class="stat-num" data-target="3" data-suffix="x">0</div><div class="stat-label">ROAS médio dos nossos clientes</div></div>
+    <div class="stat-item fade-in"><div class="stat-num" data-target="8200">0</div><div class="stat-label">Marcas que já confiam em nós</div></div>
+  </div>
+</div>
+
+<section id="features" class="fade-in">
+  <p class="section-label">Funcionalidades</p>
+  <h2 class="section-title">Tudo o que precisas<br>para escalar ads</h2>
+  <p class="section-sub">Uma plataforma que centraliza pesquisa, criação e análise de anúncios — sem sair do browser.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-number">01 — PESQUISA</div>
+      <h3>Espia os anúncios dos concorrentes</h3>
+      <p>Acede a 23M+ anúncios de Facebook, TikTok e Google. Filtra por nicho, performance e formato. Descobre o que está a escalar agora mesmo.</p>
+      <div class="mock-ui">
+        <div class="mock-row"><div class="mock-thumb">👟</div><div class="mock-info"><div class="mock-name">Nike — Running Shoes</div><div class="mock-meta">Meta · Ativo há 47 dias</div></div><span class="mock-badge green">🔥 Viral</span></div>
+        <div class="mock-row"><div class="mock-thumb">💪</div><div class="mock-info"><div class="mock-name">Gymshark — Leggings</div><div class="mock-meta">TikTok · Ativo há 12 dias</div></div><span class="mock-badge blue">Escalar</span></div>
+        <div class="mock-row"><div class="mock-thumb">🧴</div><div class="mock-info"><div class="mock-name">CeraVe — Moisturizer</div><div class="mock-meta">Google · Ativo há 89 dias</div></div><span class="mock-badge purple">Top ROAS</span></div>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-number">02 — INTELIGÊNCIA</div>
+      <h3>Brand Spy completo</h3>
+      <p>Vê a estratégia inteira dos concorrentes: anúncios ativos, landing pages, fontes de tráfego e quanto estão a gastar. Usa isso a teu favor.</p>
+      <div class="mock-ui">
+        <div style="margin-bottom:12px;font-size:12px;color:var(--muted)">Análise de marca: <strong style="color:var(--text)">Manscaped</strong></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent)">156</div><div style="font-size:11px;color:var(--muted)">Ads ativos</div></div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green)">4.2x</div><div style="font-size:11px;color:var(--muted)">ROAS estimado</div></div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#a78bfa">€85k</div><div style="font-size:11px;color:var(--muted)">Gasto/mês est.</div></div>
+          <div style="background:var(--surface2);border-radius:8px;padding:12px;text-align:center;"><div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fbbf24">12</div><div style="font-size:11px;color:var(--muted)">Landing pages</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-card full">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+        <div>
+          <div class="feature-number">03 — CRIAÇÃO IA</div>
+          <h3>Scripts de vídeo em segundos</h3>
+          <p style="margin-bottom:24px;">A nossa IA gera hooks, ângulos e scripts completos baseados nos anúncios mais rentáveis do teu nicho. Só precisas de inserir o teu produto.</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <span class="mock-badge blue" style="padding:6px 14px;font-size:12px;">🪝 Hooks virais</span>
+            <span class="mock-badge green" style="padding:6px 14px;font-size:12px;">📝 Scripts VSL</span>
+            <span class="mock-badge purple" style="padding:6px 14px;font-size:12px;">📣 CTAs testados</span>
+          </div>
+        </div>
+        <div class="mock-ui">
+          <div style="font-size:11px;color:var(--muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;">Script gerado — Suplemento Pre-Workout</div>
+          <div style="font-size:13px;line-height:1.8;color:var(--text);">
+            <span style="color:var(--accent);font-weight:600;">[HOOK]</span> "Se treinas há mais de 6 meses e ainda não vês resultados..."<br><br>
+            <span style="color:var(--accent);font-weight:600;">[PROBLEMA]</span> "O problema não é o teu esforço. É o que estás a tomar antes do treino."<br><br>
+            <span style="color:var(--green);font-weight:600;">[CTA]</span> "Clica abaixo e experimenta grátis durante 14 dias."
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pricing-section" id="pricing">
+  <div class="fade-in">
+    <p class="section-label">Preços</p>
+    <h2 class="section-title">Escolhe o teu plano</h2>
+    <p class="section-sub">Começa grátis. Escala quando quiseres. Cancela a qualquer momento.</p>
+  </div>
+  <div class="pricing-toggle fade-in">
+    <span class="toggle-label active" id="lbl-monthly">Mensal</span>
+    <button class="toggle-switch" id="billingToggle" onclick="toggleBilling()"><div class="toggle-knob"></div></button>
+    <span class="toggle-label" id="lbl-yearly">Anual</span>
+    <span class="save-badge">Poupa ~35%</span>
+  </div>
+  <div class="pricing-grid fade-in" id="pricingGrid"></div>
+</div>
+
+<div class="testimonials-section" id="testimonials">
+  <div class="fade-in">
+    <p class="section-label">Testemunhos</p>
+    <h2 class="section-title">O que dizem as marcas</h2>
+  </div>
+  <div class="testimonials-grid fade-in" id="testimonialsGrid"></div>
+</div>
+
+<div class="faq-section" id="faq">
+  <div class="fade-in" style="text-align:center;">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">Perguntas frequentes</h2>
+  </div>
+  <div class="faq-list fade-in" id="faqList"></div>
+</div>
+
+<div class="cta-section fade-in">
+  <div class="cta-card">
+    <p class="section-label" style="margin-bottom:12px;">Pronto para escalar?</p>
+    <h2>Para de adivinhar.<br>Começa a lucrar.</h2>
+    <p>Junta-te a +8.200 marcas que usam dados reais para criar anúncios vencedores.</p>
+    <a href="#pricing" class="btn-hero">Começar Grátis — 7 Dias →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">Ad<span>Spy</span>Pro</div>
+      <p>A plataforma all-in-one para espionar, criar e escalar anúncios rentáveis.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produto</h4>
+      <a href="#">Explorar Ads</a>
+      <a href="#">Brand Spy</a>
+      <a href="#">Gerar Scripts</a>
+      <a href="#">Criar Imagens IA</a>
+      <a href="#">API & MCP</a>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <a href="#">Blog</a>
+      <a href="#">Afiliados</a>
+      <a href="#">Changelog</a>
+      <a href="#">Contacto</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacidade</a>
+      <a href="#">Termos</a>
+      <a href="#">Reembolsos</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 AdSpyPro. Todos os direitos reservados.</span>
+    <span>Made with ❤️ para marketeers sérios</span>
+  </div>
+</footer>
+
+<script>
+const demoAds = [
+  { emoji:'👟', brand:'NikeRun', platform:'Meta', days:47, tag:'🔥 Viral', tagClass:'up' },
+  { emoji:'💪', brand:'Gymshark', platform:'TikTok', days:12, tag:'Escalar', tagClass:'info' },
+  { emoji:'🧴', brand:'CeraVe', platform:'Google', days:89, tag:'Top ROAS', tagClass:'up' },
+  { emoji:'☕', brand:'FabCoffee', platform:'Meta', days:5, tag:'Novo', tagClass:'info' },
+  { emoji:'🏋️', brand:'Myprotein', platform:'TikTok', days:31, tag:'🔥 Viral', tagClass:'up' },
+  { emoji:'🕶️', brand:'PradaSun', platform:'Google', days:22, tag:'Estável', tagClass:'info' },
+];
+
+function renderAds(ads) {
+  const grid = document.getElementById('adsGrid');
+  if (!grid) return;
+  grid.innerHTML = ads.map(a => `
+    <div class="ad-card-demo">
+      <div class="ad-thumb">${a.emoji}</div>
+      <div class="ad-card-meta">
+        <div class="ad-brand">${a.brand}</div>
+        <div class="ad-platform">${a.platform} · Ativo há ${a.days}d</div>
+        <div class="ad-stats"><span class="ad-stat ${a.tagClass}">${a.tag}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+renderAds(demoAds);
+
+function filterPlatform(btn, platform) {
+  document.querySelectorAll('.pf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = platform === 'Todos' ? demoAds : demoAds.filter(a => a.platform === platform);
+  renderAds(filtered.length ? filtered : demoAds);
+}
+
+const searchInput = document.getElementById('demoSearch');
+if (searchInput) {
+  searchInput.addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    const filtered = demoAds.filter(a => a.brand.toLowerCase().includes(q) || a.platform.toLowerCase().includes(q));
+    renderAds(filtered.length ? filtered : demoAds);
+  });
+}
+
+document.querySelectorAll('.sidebar-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+const plans = [
+  { name:'Starter', tag:null, monthly:29, yearly:19, desc:'Para solopreneurs a começar com inteligência de anúncios.', credits:{monthly:'50 créditos/mês',yearly:'600 créditos/ano'}, seats:'1 lugar', features:['Explorar Ads (23M+)','Guardar Anúncios','Brand Spy','Transcrição de Ads','Scripts IA','Clonar Ads','Templates de Imagem'], cta:'Teste Grátis 7 Dias' },
+  { name:'Pro', tag:'Mais Popular', monthly:49, yearly:32, desc:'Para marcas a crescer que querem escalar criativos.', credits:{monthly:'150 créditos/mês',yearly:'1800 créditos/ano'}, seats:'3 lugares', features:['Tudo do Starter','Mais créditos mensais','3 membros de equipa','API & MCP Access','Templates de Funis','Suporte prioritário'], cta:'Teste Grátis 7 Dias' },
+  { name:'Team', tag:null, monthly:79, yearly:52, desc:'Para equipas em colaboração com volume alto de testes.', credits:{monthly:'400 créditos/mês',yearly:'4800 créditos/ano'}, seats:'5 lugares', features:['Tudo do Pro','Mais créditos mensais','5 membros de equipa','API avançada (0.01 cr/ad)','Assets de produto','Onboarding de equipa'], cta:'Teste Grátis 7 Dias' },
+  { name:'Agency', tag:null, monthly:129, yearly:83, desc:'Para agências e power users com volume máximo.', credits:{monthly:'800 créditos/mês',yearly:'9600 créditos/ano'}, seats:'10 lugares', features:['Tudo do Team','Volume máximo de créditos','10 membros de equipa','API volume (0.01 cr/ad)','Suporte dedicado','Acesso antecipado a features'], cta:'Começar Agora' },
+];
+
+let isYearly = false;
+
+function renderPricing() {
+  const grid = document.getElementById('pricingGrid');
+  grid.innerHTML = plans.map(p => `
+    <div class="price-card ${p.tag ? 'popular' : ''}">
+      ${p.tag ? `<div class="popular-tag">${p.tag}</div>` : ''}
+      <div class="price-plan">${p.name}</div>
+      <div class="price-desc">${p.desc}</div>
+      <div class="price-amount"><span class="price-currency">€</span><span class="price-num">${isYearly ? p.yearly : p.monthly}</span><span class="price-period">/mês</span></div>
+      <div class="price-billing">${isYearly ? '· Faturado anualmente' : '· Faturado mensalmente'}</div>
+      <button class="price-cta" onclick="selectPlan('${p.name}')">${p.cta}</button>
+      <ul class="price-features">
+        <li><span class="check">●</span> ${isYearly ? p.credits.yearly : p.credits.monthly}</li>
+        <li><span class="check">●</span> ${p.seats}</li>
+        ${p.features.map(f => `<li><span class="check" style="color:var(--green)">✓</span> ${f}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
+renderPricing();
+
+function toggleBilling() {
+  isYearly = !isYearly;
+  const btn = document.getElementById('billingToggle');
+  btn.classList.toggle('on', isYearly);
+  document.getElementById('lbl-monthly').classList.toggle('active', !isYearly);
+  document.getElementById('lbl-yearly').classList.toggle('active', isYearly);
+  renderPricing();
+}
+
+function selectPlan(name) {
+  alert('Plano "' + name + '" selecionado!\n\nRedirecionar para checkout...');
+}
+
+const testimonials = [
+  { name:'Bryan G.', role:'Owner 7-Fig Ecom', stars:5, text:'Simplifica a pesquisa de produtos e mostra exatamente o que está a funcionar para marcas similares. Saltas a fase de tentativa e erro.' },
+  { name:'Jayden R.', role:'Fundador 7-Fig', stars:5, text:'Torna a descoberta de anúncios de alta performance quase sem esforço. Dados reais, landing pages reais, tudo num só sítio.' },
+  { name:'Mike K.', role:'CEO @FabCoffee', stars:5, text:'Mudou completamente a forma como faço research. Poupei mais de 100 horas por mês só com este acesso rápido a dados.' },
+  { name:'Marc V.', role:'Multi 8-Fig Owner', stars:5, text:'A facilidade com que encontras criativos vencedores é incrível. Anúncios ativos, landing pages reais, todos os dados para lançar com confiança.' },
+  { name:'Wilson D.', role:'6-Fig Ecom Owner', stars:5, text:'Em horas encontrei 10 produtos viáveis. Mostrou se eram vencedores e deu os links. 5 estrelas sem hesitar.' },
+  { name:'Youlia G.', role:'Media Buyer', stars:5, text:'Adorei! Ajudou-me a encontrar anúncios vencedores muito mais rápido e a simplificar todo o processo criativo.' },
+  { name:'Irakli G.', role:'Growth Manager', stars:5, text:'Esta ferramenta foi um game-changer! O processo de criação de ads é muito mais eficiente. Fácil de usar e resultados excepcionais.' },
+  { name:'Reagan S.', role:'Creative Strategist', stars:5, text:'Fiquei muito melhor a analisar porque um criativo converte. Saber quais estão a ganhar é dados que nenhum outro software dá.' },
+];
+
+function renderTestimonials() {
+  document.getElementById('testimonialsGrid').innerHTML = testimonials.map(t => `
+    <div class="testimonial-card">
+      <div class="t-stars">${'★'.repeat(t.stars)}</div>
+      <p class="t-text">${t.text}</p>
+      <div class="t-author">
+        <div class="t-avatar">${t.name[0]}</div>
+        <div><div class="t-name">${t.name}</div><div class="t-role">${t.role}</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+renderTestimonials();
+
+const faqs = [
+  { q:'O que é o AdSpyPro e como funciona?', a:'O AdSpyPro é uma plataforma de inteligência de anúncios com IA que centraliza pesquisa, criação e análise de criativos. Tens acesso a 23M+ anúncios ativos, podes espiar concorrentes, gerar scripts com IA e criar imagens em segundos.' },
+  { q:'Quais plataformas de anúncios são suportadas?', a:'Atualmente suportamos Facebook/Instagram (Meta), TikTok e Google Ads. Continuamos a adicionar plataformas regularmente.' },
+  { q:'Como funciona o sistema de créditos?', a:'Cada plano inclui créditos mensais. Brand Spy usa 8 créditos por marca, Scripts IA usa 5, Transcrição usa 1. Podes comprar créditos adicionais a qualquer momento sem mudar de plano.' },
+  { q:'Posso cancelar a qualquer momento?', a:'Sim. Podes cancelar a qualquer momento nas definições da conta. Mantés acesso até ao fim do ciclo de faturação atual. Sem penalizações.' },
+  { q:'Existe teste gratuito?', a:'Sim! Todos os planos têm um trial de 7 dias sem compromisso. Não precisas de cartão de crédito para começar.' },
+  { q:'Posso adicionar membros de equipa?', a:'Sim. Cada plano inclui lugares para equipa (1 no Starter, 3 no Pro, 5 no Team, 10 no Agency). Podes adicionar lugares extra por um custo adicional.' },
+  { q:'Os dados de anúncios são em tempo real?', a:'Atualizamos a nossa base de dados diariamente. Vês anúncios que estão ativos agora, com dados de performance atualizados regularmente.' },
+  { q:'Há desconto para planos anuais?', a:'Sim! O plano anual oferece uma poupança de ~35% comparado com o pagamento mensal.' },
+];
+
+function renderFaqs() {
+  document.getElementById('faqList').innerHTML = faqs.map((f, i) => `
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-question" onclick="toggleFaq(${i})">
+        <span>${f.q}</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer">${f.a}</div>
+    </div>
+  `).join('');
+}
+renderFaqs();
+
+function toggleFaq(i) {
+  document.getElementById('faq-'+i).classList.toggle('open');
+}
+
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const suffix = el.dataset.suffix || '';
+  let current = 0;
+  const step = target / 60;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(timer); }
+    const display = target >= 1000 ? Math.floor(current).toLocaleString('pt') : Math.floor(current);
+    el.textContent = display + suffix;
+  }, 16);
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      entry.target.querySelectorAll('[data-target]').forEach(el => animateCounter(el));
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+  const o = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target); o.unobserve(e.target); } });
+  }, { threshold: 0.5 });
+  o.observe(el);
+});
+</script>
+</body>
+</html>
